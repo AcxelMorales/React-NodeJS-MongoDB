@@ -1,6 +1,7 @@
 const express    = require('express');
 const mongoose   = require('mongoose');
 const bodyParser = require('body-parser');
+const cors       = require('cors');
 
 const app = express();
 
@@ -16,6 +17,17 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: true
 }));
+
+// Proteger API
+const whiteList = ['http://localhost:3000'];
+const corsOptions = {
+  origin: (origin, callback) => {
+    const existe = whiteList.some(dominio => dominio === origin);
+    (existe) ? callback(null, true) : callback(new Error('No permitido por CORS'));
+  }
+};
+
+app.use(cors(corsOptions));
 
 ///////////////////////////////////////////////////////////////////////////////////////
 // <= ROUTES =>
